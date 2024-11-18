@@ -2,31 +2,27 @@ const formEl = document.querySelector(".form");
 const inputEl = document.querySelector(".input");
 const listEl = document.querySelector(".list");
 
-let listItems = JSON.parse(localStorage.getItem("listItems")) || [];
-
-listItems.forEach((item) => {
-  toDoList(item);
-});
+let listItems = JSON.parse(localStorage.getItem("listItems"));
 
 formEl.addEventListener("submit", (e) => {
   e.preventDefault();
-  toDoList(listItems);
+  toDoList();
 });
 
-const toDoList = (listItems) => {
-  const inputValue = inputEl.value;
+const toDoList = (task) => {
+  let newTask = inputEl.value;
 
-  if (listItems) {
-    inputValue = listItems.text;
+  if (task) {
+     newTask = task.name;
   }
 
   const toDoItem = document.createElement("li");
 
-  if (listItems && listItems.checked) {
-    toDoItem.classList.add("checked");
-  }
+   if (task && task.checked) {
+     toDoItem.classList.add("checked");
+   }
 
-  toDoItem.innerText = inputValue;
+  toDoItem.innerText = newTask;
   listEl.appendChild(toDoItem);
   inputEl.value = "";
 
@@ -49,18 +45,23 @@ const toDoList = (listItems) => {
   });
 
   updateLocalStorage();
+
 };
 
-const updateLocalStorage = () => {
-  const toDoItems = document.querySelectorAll("li");
-  listItems = [];
+ const updateLocalStorage = () => {
+   const toDoItems = document.querySelectorAll("li");
+   listItems = [];
 
-  toDoItems.forEach((item) => {
+   toDoItems.forEach((item) => {
     listItems.push({
-      text: item.innerText,
-      checked: item.classList.contains("checked"),
-    });
-  });
+       name: item.innerText,
+       checked: item.classList.contains("checked"),
+     });
+   });
 
-  localStorage.setItem("listItems", JSON.stringify(listItems));
-};
+   localStorage.setItem("listItems", JSON.stringify(listItems));
+ };
+
+ listItems.forEach((task) => {
+  toDoList(task);
+});
